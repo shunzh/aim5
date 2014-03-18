@@ -30,8 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.map.destination;
 
-import java.util.List;
-
 import aim4.map.Road;
 import aim4.map.lane.Lane;
 
@@ -71,10 +69,4 @@ public class UniqueDestinationSelector implements DestinationSelector {
   public Road selectDestination(Lane currentLane) {
     return endRoad;
   }
-
-	@Override
-	public List<Road> getPossibleDestination(Lane currentLane) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

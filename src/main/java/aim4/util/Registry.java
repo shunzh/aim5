@@ -30,8 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.util;
 
-import java.util.List;
-
 /**
  * A generic registry.
  *
@@ -63,12 +61,6 @@ public interface Registry<T> {
    */
   T get(int id);
 
-  /**
-   * get all the values of 
-   * @return
-   */
-  List<T> getValues();
-  
   /**
    * Get a new unused ID.
    *

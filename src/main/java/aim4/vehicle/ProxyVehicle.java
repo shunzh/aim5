@@ -48,7 +48,6 @@ import aim4.map.lane.Lane;
 import aim4.msg.v2i.Request;
 import aim4.msg.v2i.Cancel;
 import aim4.config.Debug;
-import aim4.config.SimConfig.VEHICLE_TYPE;
 import aim4.driver.ProxyDriver;
 import aim4.msg.udp.Real2ProxyPVUpdate;
 import aim4.msg.v2i.V2IMessage;
@@ -126,7 +125,7 @@ public class ProxyVehicle extends BasicAutoVehicle
                       double acceleration,
                       double currentTime) {
     super(VehicleSpecDatabase.getVehicleSpecByName("MARVIN"), pos, heading,
-          steeringAngle, velocity, targetVelocity, acceleration, currentTime, VEHICLE_TYPE.AUTO);
+          steeringAngle, velocity, targetVelocity, acceleration, currentTime);
     driver = null;
     sa = null;
     lastTimeStamp = Double.MIN_VALUE;

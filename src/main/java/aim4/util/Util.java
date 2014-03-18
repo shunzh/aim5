@@ -38,7 +38,6 @@ import aim4.config.Condor;
 import aim4.config.Constants;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -55,8 +54,8 @@ public class Util {
   /////////////////////////////////
 
   /** The random seed for all random number generators in the simulation */
-  //public static long randSeed = (new Random()).nextLong();
-  public static long randSeed = -6397397808339168785L;
+  public static long randSeed = (new Random()).nextLong();
+  // public static final long randSeed = -6397397808339168785L;
 
   /** The global random number generator */
   public static final Random random = new Random(randSeed);
@@ -352,8 +351,8 @@ public class Util {
   public static List<String> readFileToStrArray(String inFileName) throws
       IOException {
     List<String> result = new LinkedList<String>();
-    FileInputStream fstream = new FileInputStream(inFileName);
-    // InputStream fstream = Util.class.getResourceAsStream(inFileName);
+    // FileInputStream fstream = new FileInputStream(inFileName);
+    InputStream fstream = Util.class.getResourceAsStream(inFileName);
     if (fstream == null) { System.err.printf("Fuck this: %s\n", inFileName); }
     DataInputStream in = new DataInputStream(fstream);
     BufferedReader br = new BufferedReader(new InputStreamReader(in));

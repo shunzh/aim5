@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Queue;
 
 import aim4.config.Debug;
-import aim4.config.Resources;
 import aim4.config.SimConfig;
 import aim4.config.Constants.TurnDirection;
 import aim4.driver.AutoDriver;
@@ -47,7 +46,6 @@ import aim4.driver.navigator.Navigator;
 import aim4.driver.pilot.V2IPilot;
 import aim4.im.IntersectionManager;
 import aim4.im.v2i.V2IManager;
-import aim4.im.v2i.policy.BasePolicy;
 import aim4.map.BasicMap;
 import aim4.map.Road;
 import aim4.map.lane.Lane;
@@ -61,7 +59,6 @@ import aim4.msg.v2i.Request;
 import aim4.util.Util;
 import aim4.vehicle.AccelSchedule;
 import aim4.vehicle.AutoVehicleDriverView;
-import aim4.vehicle.VehicleSimView;
 import aim4.vehicle.VehicleUtil;
 
 /**
@@ -1203,8 +1200,6 @@ public class V2ICoordinator implements Coordinator {
    * @param msg the reject message.
    */
   private void processRejectMessageForAwaitingResponseState(Reject msg) {
-  	// disable this
-  	
     switch(msg.getReason()) {
     case NO_CLEAR_PATH:
       // normal reason for rejection, just go back to the planning state.
@@ -1534,20 +1529,14 @@ public class V2ICoordinator implements Coordinator {
 
       // Compute the estimated arrival time and velocity
       double minArrivalTime =
-        vehicle.gaugeTime();//+ MINIMUM_FUTURE_RESERVATION_TIME;
+        vehicle.gaugeTime() + MINIMUM_FUTURE_RESERVATION_TIME;
 
       for (int i = 0; i < n; i++) {
         ArrivalEstimationResult result =
           estimateArrival(maximumVelocities.get(i));
-        if (result != null) {
-        	arrivalVelocities.add(result.getArrivalVelocity());
-          // Make sure our arrival time is at least a certain amount
-          arrivalTimes.add(Math.max(result.getArrivalTime(), minArrivalTime));
-        }
-        else {
-        	arrivalVelocities.add(null);
-          arrivalTimes.add(null);
-        }
+        arrivalVelocities.add(result.getArrivalVelocity());
+        // Make sure our arrival time is at least a certain amount
+        arrivalTimes.add(Math.max(result.getArrivalTime(), minArrivalTime));
       }
       // Convert the arrival and departure lanes to ID numbers and put them
       // in lists to prepare to make the request
@@ -1562,8 +1551,8 @@ public class V2ICoordinator implements Coordinator {
       // eliminate proposals that are not valid and then return the result.
       List<Request.Proposal> proposals = new ArrayList<Request.Proposal>(n);
       for(int i = 0; i<n; i++) {
-        if (arrivalTimes.get(i) != null &&
-        		arrivalTimes.get(i) < vehicle.gaugeTime() + MAXIMUM_FUTURE_RESERVATION_TIME) {
+        if (arrivalTimes.get(i) <
+            vehicle.gaugeTime() + MAXIMUM_FUTURE_RESERVATION_TIME) {
           proposals.add(
             new Request.Proposal(
               arrivalLaneIDs.get(i),
@@ -1649,8 +1638,7 @@ public class V2ICoordinator implements Coordinator {
       }
 
       List<Request.Proposal> proposals = null;
-
-      if (isAllowedToPropose()) {
+      if (isLaneClearToIntersection()) {
         proposals = prepareProposals();
         if (isDebugging && proposals == null) {
           System.err.printf("At time %.2f, vin %d failed to prepare " +
@@ -2017,9 +2005,6 @@ public class V2ICoordinator implements Coordinator {
     }
     this.state = state;
     lastStateChangeTime = vehicle.gaugeTime();
-    
-    // let the driver know his current state
-    driver.setState(state);
   }
 
   /**
@@ -2056,25 +2041,7 @@ public class V2ICoordinator implements Coordinator {
     return (d3 <= V2IPilot.DEFAULT_STOP_DISTANCE_BEFORE_INTERSECTION);
   }
 
-  /**
-   * check whether it's okay to propose.
-   * 
-   * for normal situation, this will call isLaneClearToIntersection;
-   * for SIGNAL-based FCFS, this will check weather the vehicle
-   * in front of it has got reservations. 
-   * 
-   * TODO problems in implementation
-   * 
-   * @return the result
-   */
-  private boolean isAllowedToPropose() {
-		if (isLaneClearToIntersection()) {
-			return true;
-		}
-		
-		return false;
-  }
-  
+
   /**
    * Find an acceleration schedule such that the vehicle can stop
    * at the intersection.

@@ -31,7 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package aim4.sim.setup;
 
 import aim4.config.Debug;
-import aim4.config.Resources;
 import aim4.config.SimConfig;
 import aim4.driver.pilot.V2IPilot;
 import aim4.im.v2i.reservation.ReservationGridManager;
@@ -113,8 +112,6 @@ public class ApproxNPhasesTrafficSignalSimSetup extends BasicSimSetup
                                        medianSize,
                                        distanceBetween);
 
-    Resources.map = layout;
-    
     ReservationGridManager.Config gridConfig =
       new ReservationGridManager.Config(SimConfig.TIME_STEP,
                                         SimConfig.GRID_TIME_STEP,
@@ -130,9 +127,8 @@ public class ApproxNPhasesTrafficSignalSimSetup extends BasicSimSetup
         layout, currentTime, gridConfig, trafficSignalPhaseFileName);
 
     if (numOfColumns == 1 && numOfRows == 1) {
-      // here --menie
-      GridMapUtil.setUniformRatioSpawnPoints(layout, trafficVolumeFileName, trafficLevel);
-      //GridMapUtil.setUniformTurnBasedSpawnPoints(layout, trafficLevel);
+      GridMapUtil.setUniformRatioSpawnPoints(layout, trafficVolumeFileName);
+      // GridLayoutUtil.setUniformTurnBasedSpawnPoints(layout, trafficLevel);
     } else {
       GridMapUtil.setUniformRandomSpawnPoints(layout, trafficLevel);
     }

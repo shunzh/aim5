@@ -65,10 +65,9 @@ public interface BasePolicyCallback {
    *
    * @param msg        the request message
    * @param proposals  the set of proposals
-   * @param greenLight 
    * @return the reservation parameters; null if the reservation is infeasible.
    */
-  ReserveParam findReserveParam(Request msg, List<Request.Proposal> proposals, boolean greenLight);
+  ReserveParam findReserveParam(Request msg, List<Request.Proposal> proposals);
 
   /**
    * Get the current time
@@ -84,13 +83,7 @@ public interface BasePolicyCallback {
    * @return whether the vehicle currently has a reservation.
    */
   boolean hasReservation(int vin);
-  
-  /**
-   * Check whether a vehicle has been told to slow down, or to stop,
-   * that is, he has received reject message before
-   * @return
-   */
-  boolean hasBeenRejected(int vin);
+
 
   // TODO: remove this function
   TrackModel getTrackMode();

@@ -34,8 +34,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
-import aim4.config.SimConfig;
-import aim4.config.SimConfig.VEHICLE_TYPE;
 import aim4.map.lane.Lane;
 import aim4.vehicle.VehicleSpec;
 
@@ -60,8 +58,6 @@ public class SpawnPoint {
     VehicleSpec vehicleSpec;
     /** The destination road */
     Road destinationRoad;
-    /** whether it's a human driver */
-	private SimConfig.VEHICLE_TYPE vehicleType;
 
     /**
      * Create a spawn specification.
@@ -69,14 +65,12 @@ public class SpawnPoint {
      * @param spawnTime        the spawn time
      * @param vehicleSpec      the vehicle specification
      * @param destinationRoad  the destination road
-     * @param human			   whether it's a human driver
      */
     public SpawnSpec(double spawnTime, VehicleSpec vehicleSpec,
-                     Road destinationRoad, SimConfig.VEHICLE_TYPE vehicleType) {
+                     Road destinationRoad) {
       this.spawnTime = spawnTime;
       this.vehicleSpec = vehicleSpec;
       this.destinationRoad = destinationRoad;
-      this.vehicleType = vehicleType;
     }
 
     /**
@@ -98,36 +92,11 @@ public class SpawnPoint {
     }
 
     /**
-     * Check whether it's a human driver
-     * 
-     * @return yes - it's a human driver; no - otherwise.
-     */
-    public boolean isHuman() {
-    	return (this.vehicleType == VEHICLE_TYPE.HUMAN); 
-    }
-    
-    /**
-     * Check whether it's a informed human driver
-     * 
-     * @return
-     */
-    public boolean isInformedHuman() {
-    	return (this.vehicleType == VEHICLE_TYPE.CRUISE);
-    }
-    
-    /**
-     * Return vehicle type
-     * @return
-     */
-    public VEHICLE_TYPE getVehicleType() {
-    	return this.vehicleType;
-    }
-    
-    /**
      * Get the destination road.
      *
      * @return the destination road
-     */public Road getDestinationRoad() {
+     */
+    public Road getDestinationRoad() {
       return destinationRoad;
     }
   }
@@ -145,11 +114,6 @@ public class SpawnPoint {
      * @return the list of spawn spec generated in this time step.
      */
     List<SpawnSpec> act(SpawnPoint spawnPoint, double timeStep);
-    
-    /**
-     * To inform the spawning point that the vehicle is successfully generated.
-     */
-    void vehicleGenerated();
   }
 
 
@@ -256,9 +220,6 @@ public class SpawnPoint {
     return spawnSpecs;
   }
 
-  public void vehicleGenerated() {
-  	vehicleSpecChooser.vehicleGenerated();
-  }
   /////////////////////////////////
   // PUBLIC METHODS
   /////////////////////////////////

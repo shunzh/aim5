@@ -87,7 +87,6 @@ public class AutoDriverOnlySimSetup extends BasicSimSetup implements SimSetup {
   private double processingInterval = RoadBasedReordering.DEFAULT_PROCESSING_INTERVAL;
   /** The name of the file about the traffic volume */
   private String trafficVolumeFileName = null;
-  
 
   /////////////////////////////////
   // CONSTRUCTORS
@@ -297,14 +296,14 @@ public class AutoDriverOnlySimSetup extends BasicSimSetup implements SimSetup {
                                                  vTrafficLevel);
         break;
       case FILE:
-    	// we'll call this --menie
-        GridMapUtil.setUniformRatioSpawnPoints(layout, trafficVolumeFileName, trafficLevel);
+        GridMapUtil.setUniformRatioSpawnPoints(layout, trafficVolumeFileName);
         break;
       }
     } else {
       GridMapUtil.setFCFSManagers(layout, currentTime, gridConfig);
       GridMapUtil.setBaselineSpawnPoints(layout, 12.0);
     }
+
 
     V2IPilot.DEFAULT_STOP_DISTANCE_BEFORE_INTERSECTION =
       stopDistBeforeIntersection;
